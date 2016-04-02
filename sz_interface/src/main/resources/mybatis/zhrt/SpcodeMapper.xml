@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhrt.dao.SpcodeDao">
+
+	<!-- 表名 -->
+	<sql id="base_table" > 
+	    infospcode
+	</sql>  
+	
+	<!-- 插入字段 -->
+	<sql id="insert_field_list">
+		id,
+		spId,
+		name,
+		operatorType,
+		feeStatus,
+		feeCode,
+		feeNumber,
+		chargeMoney,
+		interceptWord,
+		replyType,
+		replyContent,
+		chargeTimes,
+		chargeProvince,
+		chargeTimeBegin,
+		chargeTimeEnd,
+		createPerson,
+		createTime,
+		lastUpdatePerson,
+		lastUpdateTime,
+		limitDayNum,
+		limitDayMoney,
+		limitMonthNum,
+		limitMonthMoney,
+		status
+	</sql>
+
+	<!-- 查询字段 -->
+	<sql id="select_field_list">
+		id,
+		spId,
+		name,
+		operatorType,
+		feeStatus,
+		feeCode,
+		feeNumber,
+		chargeMoney,
+		interceptWord,
+		replyType,
+		replyContent,
+		chargeTimes,
+		chargeProvince,
+		chargeTimeBegin,
+		chargeTimeEnd,
+		createPerson,
+		createTime,
+		lastUpdatePerson,
+		lastUpdateTime,
+		limitDayNum,
+		limitDayMoney,
+		limitMonthNum,
+		limitMonthMoney,
+		status
+	</sql>
+	
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+	
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where  1=1 
+			<if test="id != null and id != ''">  
+			 and id=#{id} 
+			</if>
+			<if test="spId != null and spId != ''">  
+			 and spId=#{spId} 
+			</if>
+			<if test="name != null and name != ''">  
+			 and name=#{name} 
+			</if>
+			<if test="operatorType != null and operatorType != ''">  
+			 and operatorType=#{operatorType} 
+			</if>
+			<if test="feeStatus != null and feeStatus != ''">  
+			 and feeStatus=#{feeStatus} 
+			</if>
+			<if test="feeCode != null and feeCode != ''">  
+			 and feeCode=#{feeCode} 
+			</if>
+			<if test="feeNumber != null and feeNumber != ''">  
+			 and feeNumber=#{feeNumber} 
+			</if>
+			<if test="chargeMoney != null">  
+			 and chargeMoney=#{chargeMoney} 
+			</if>
+			
+			
+			<if test="interceptWord != null and interceptWord != ''">  
+			 and interceptWord=#{interceptWord} 
+			</if>
+			<if test="replyType != null and replyType != ''">  
+			 and replyType=#{replyType} 
+			</if>
+			<if test="replyContent != null">  
+			 and replyContent=#{replyContent} 
+			</if>
+			<if test="chargeTimes != null">  
+			 and chargeTimes=#{chargeTimes} 
+			</if>
+			<if test="chargeProvince != null and chargeProvince != ''">  
+			 and chargeProvince=#{chargeProvince} 
+			</if>
+			<if test="chargeTimeBegin != null and chargeTimeBegin != ''">  
+			 and chargeTimeBegin=#{chargeTimeBegin} 
+			</if>
+			<if test="chargeTimeEnd != null and chargeTimeEnd != ''">  
+			 and chargeTimeEnd=#{chargeTimeEnd} 
+			</if>
+			
+			<if test="createPerson != null and createPerson != ''">  
+			 and createPerson=#{createPerson} 
+			</if>
+			<if test="createTime != null and createTime != ''">  
+			 and createTime=#{createTime} 
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson != ''">  
+			 and lastUpdatePerson=#{lastUpdatePerson} 
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime != ''">  
+			 and lastUpdateTime=#{lastUpdateTime} 
+			</if>
+			<if test="limitDayNum != null ">  
+			 and limitDayNum=#{limitDayNum} 
+			</if>
+			<if test="limitDayMoney != null ">  
+			 and limitDayMoney=#{limitDayMoney} 
+			</if>
+			<if test="limitMonthNum != null">  
+			 and limitMonthNum=#{limitMonthNum} 
+			</if>
+			<if test="limitMonthMoney != null ">  
+			 and limitMonthMoney=#{limitMonthMoney} 
+			</if>
+			<if test="status != null">  
+			 and status=#{status} 
+			</if>
+	</sql> 
+
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if test="orderBy != null and  orderBy != '' and order != null and  order != '' ">  
+			 order by ${orderBy} ${order} 
+		</if>
+		<if test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">  
+			 limit #{limitB},#{limitNum} 
+		</if>
+	</sql> 
+		
+	<!-- 查询单条数据 -->
+	<select id="get" parameterType="map" resultType="com.zhrt.entity.Spcode">
+		SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>  
+		<include refid="select_condition_where"/> 
+		limit 1
+	</select> 
+	
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="com.zhrt.entity.Spcode">
+		SELECT <include refid="select_field_list" />
+		from <include refid="base_table"/>
+		<include refid="select_condition_where"/>
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT <include refid="select_field_count" />
+		from <include refid="base_table"/> 
+		<include refid="select_condition_where"/>
+	</select> 
+	
+	<insert id="add" parameterType="map">
+	  <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+	    SELECT UUID_SHORT() as id;   
+	  </selectKey>
+	  insert into  <include refid="base_table" />
+	  ( <include refid="insert_field_list" /> )  
+	 values( 
+		 #{id},
+		 #{spId},
+		 #{name},
+		 #{operatorType},
+		 #{feeStatus},
+		 #{feeCode},
+		 #{feeNumber},
+		 #{chargeMoney},
+		 
+		 #{interceptWord},
+		 #{replyType},
+		 #{replyContent},
+		 #{chargeTimes},
+		 #{chargeProvince},
+		 #{chargeTimeBegin},
+		 #{chargeTimeEnd},
+		 
+		 #{createPerson},
+		 #{createTime},
+		 #{lastUpdatePerson},
+		 #{lastUpdateTime},
+		 #{limitDayNum},
+		 #{limitDayMoney},
+		 #{limitMonthNum},
+		 #{limitMonthMoney},
+		 #{status}
+	 )  
+	</insert>  
+
+
+	<!-- 修改信息，只修改只不为空的字段 -->  
+	<update id="update" parameterType="Object" >  
+	    update <include refid="base_table" /> 
+	    set
+	    <if test="spId != null and spId !='null'">  
+			spId=#{spId},
+	    </if>
+	    <if test="name != null and name !='null'">  
+			name=#{name},
+	    </if>
+	    <if test="operatorType != null and operatorType !='null'">  
+			operatorType=#{operatorType},
+	    </if>
+	    <if test="feeStatus != null and feeStatus !='null'">  
+			feeStatus=#{feeStatus},
+	    </if>
+	    <if test="feeCode != null and feeCode !='null'">  
+			feeCode=#{feeCode},
+	    </if>
+	    <if test="feeNumber != null and feeNumber !='null'">  
+			feeNumber=#{feeNumber},
+	    </if>
+	    <if test="chargeMoney != null">  
+			chargeMoney=#{chargeMoney},
+	    </if>
+	    
+	    <if test="interceptWord != null and interceptWord !='null'">  
+			interceptWord=#{interceptWord},
+	    </if>
+	    <if test="replyType != null and replyType !='null'">  
+			replyType=#{replyType},
+	    </if>
+	    <if test="replyContent != null">  
+			replyContent=#{replyContent},
+	    </if>
+	    <if test="chargeTimes != null">  
+			chargeTimes=#{chargeTimes},
+	    </if>
+	    <if test="chargeProvince != null and chargeProvince !='null'">  
+			chargeProvince=#{chargeProvince},
+	    </if>
+	    <if test="chargeTimeBegin != null and chargeTimeBegin !='null'">  
+			chargeTimeBegin=#{chargeTimeBegin},
+	    </if>
+	    <if test="chargeTimeEnd != null and chargeTimeEnd !='null'">  
+			chargeTimeEnd=#{chargeTimeEnd},
+	    </if>
+	    
+	    
+	    <if test="createPerson != null and createPerson !='null'">  
+			createPerson=#{createPerson},
+	    </if>
+	    <if test="createTime != null and createTime !='null'">  
+			createTime=#{createTime},
+	    </if>
+	    <if test="lastUpdatePerson != null and lastUpdatePerson !='null'">  
+			lastUpdatePerson=#{lastUpdatePerson},
+	    </if>
+	    <if test="lastUpdateTime != null and lastUpdateTime !='null'">  
+			lastUpdateTime=#{lastUpdateTime},
+	    </if> 
+	    <if test="limitDayNum != null ">  
+			limitDayNum=#{limitDayNum},
+	    </if> 
+	    <if test="limitDayMoney != null ">  
+			limitDayMoney=#{limitDayMoney},
+	    </if> 
+	    <if test="limitMonthNum != null ">  
+			limitMonthNum=#{limitMonthNum},
+	    </if> 
+	    <if test="limitMonthMoney != null ">  
+			limitMonthMoney=#{limitMonthMoney},
+	    </if> 
+	    <if test="status != null">  
+			status=#{status},
+	    </if> 
+	    	id=#{id}
+	    where id=#{id}
+	</update>
+	  	
+
+	<!-- 删除信息 -->  
+	<delete id="delById" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where id=#{id}
+	</delete>
+
+	<!-- 批量删除信息 -->  
+	<delete id="delBatch" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where
+	    <if test="ids != null">
+	    	id in
+	    	 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+				#{item}
+			</foreach>  
+			and
+	    </if>
+	    <if test="id != null">
+			id=#{id}  and
+	    </if>
+	    1=1
+	</delete>
+</mapper> 

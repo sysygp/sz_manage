@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhrt.dao.BillingterminalDao">
+
+	<!-- 表名 -->
+	<sql id="base_table">
+		billingterminal
+	</sql>
+
+	<!-- 插入字段 -->
+	<sql id="insert_field_list">
+		id ,
+		userUuid ,
+		chanAppSeq ,
+		tel ,
+		price ,
+		channelId ,
+		channelName,
+		spId,
+		spCodeId,
+		cpId,
+		cpName,
+		serviceId,
+		serviceName,
+		propId,
+		spCodeName,
+		cTime
+	</sql>
+
+	<!-- 查询字段 -->
+	<sql id="select_field_list">
+		id ,
+		userUuid ,
+		chanAppSeq ,
+		tel ,
+		price ,
+		channelId ,
+		channelName ,
+		spId,
+		spCodeId,
+		cpId,
+		cpName,
+		serviceId,
+		serviceName,
+		propId,
+		spCodeName,
+		cTime
+	</sql>
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where 1=1
+		<if test="id != null and id != ''">
+			and id=#{id}
+		</if>
+		<if test="userUuid != null and userUuid != ''">
+			and userUuid=#{userUuid}
+		</if>
+		<if test="chanAppSeq != null and chanAppSeq != ''">
+			and chanAppSeq=#{chanAppSeq}
+		</if>
+		<if test="tel != null and tel != ''">
+			and tel=#{tel}
+		</if>
+		<if test="price != null">
+			and price=#{price}
+		</if>
+		<if test="channelId != null">
+			and channelId=#{channelId}
+		</if>
+		<if test="channelName != null">
+			and channelName=#{channelName}
+		</if>
+		<if test="spId != null and spId != ''">
+			and spId=#{spId}
+		</if>
+		<if test="spCodeId != null and spCodeId != ''">
+			and spCodeId=#{spCodeId}
+		</if>
+		<if test="cpId != null and cpId != ''">
+			and cpId=#{cpId}
+		</if>
+		<if test="cpName != null and cpName != ''">
+			and cpName=#{cpName}
+		</if>
+		<if test="serviceId != null and serviceId != ''">
+			and serviceId=#{serviceId}
+		</if>
+		<if test="serviceName != null and serviceName != ''">
+			and serviceName=#{serviceName}
+		</if>
+		<if test="propId != null and propId != ''">
+			and propId=#{propId}
+		</if>
+		<if test="spCodeName != null and spCodeName != ''">
+			and spCodeName=#{spCodeName}
+		</if>
+		<if test="cTime != null">
+			and cTime=#{cTime}
+		</if>
+	</sql>
+
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if
+			test="orderBy != null and  orderBy != '' and order != null and  order != '' ">
+			order by ${orderBy} ${order}
+		</if>
+		<if
+			test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">
+			limit #{limitB},#{limitNum}
+		</if>
+	</sql>
+
+	<!-- 查询单条数据 -->
+	<select id="get" parameterType="map" resultType="com.zhrt.entity.Billingterminal">
+		SELECT
+		<include refid="select_field_list" />
+		from
+		<include refid="base_table" />
+		<include refid="select_condition_where" />
+		limit 1
+	</select>
+
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="com.zhrt.entity.Billingterminal">
+		SELECT
+		<include refid="select_field_list" />
+		from
+		<include refid="base_table" />
+		<include refid="select_condition_where" />
+		<include refid="select_condition_orderlimit" />
+	</select>
+
+
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT
+		<include refid="select_field_count" />
+		from
+		<include refid="base_table" />
+		<include refid="select_condition_where" />
+	</select>
+
+	<insert id="add" parameterType="map">
+		<selectKey resultType="String" order="BEFORE" keyProperty="id">
+			SELECT UUID_SHORT() as id;
+		</selectKey>
+		insert into
+		<include refid="base_table" />
+		(
+		<include refid="insert_field_list" />
+		)
+		values(
+		#{id },
+		#{userUuid},
+		#{chanAppSeq },
+		#{tel },
+		#{price },
+		#{channelId },
+		#{channelName },
+		#{spId },
+		#{spCodeId },
+		#{cpId },
+		#{cpName },
+		#{serviceId },
+		#{serviceName },
+		#{propId },
+		#{spCodeName },
+		#{cTime }
+		)
+	</insert>
+
+
+	<!-- 修改信息，只修改只不为空的字段 -->
+	<update id="update" parameterType="Object">
+		update
+		<include refid="base_table" />
+		set
+		<if test="userUuid != null and userUuid !='null'">
+			userUuid=#{userUuid},
+		</if>
+		<if test="chanAppSeq != null and chanAppSeq !='null'">
+			chanAppSeq=#{chanAppSeq},
+		</if>
+		<if test="tel != null and tel !='null'">
+			tel=#{tel},
+		</if>
+		<if test="price != null">
+			price=#{price},
+		</if>
+		<if test="channelId != null">
+			channelId=#{channelId},
+		</if>
+		<if test="channelName != null">
+			channelName=#{channelName},
+		</if>
+		<if test="spId != null and spId != ''">
+			spId=#{spId},
+		</if>
+		<if test="spCodeId != null and spCodeId != ''">
+			spCodeId=#{spCodeId},
+		</if>
+		<if test="cpId != null and cpId != ''">
+			cpId=#{cpId},
+		</if>
+		<if test="cpName != null and cpName != ''">
+			cpName=#{cpName},
+		</if>
+		<if test="serviceId != null and serviceId != ''">
+			serviceId=#{serviceId},
+		</if>
+		<if test="serviceName != null and serviceName != ''">
+			serviceName=#{serviceName},
+		</if>
+		<if test="propId != null and propId != ''">
+			propId=#{propId},
+		</if>
+		<if test="spCodeName != null and spCodeName != ''">
+			spCodeName=#{spCodeName},
+		</if>
+		<if test="cTime != null">
+			cTime=#{cTime},
+		</if>		
+		id=#{id}
+		where id=#{id}
+	</update>
+
+
+	<!-- 删除信息 -->
+	<delete id="delById" parameterType="Object">
+		delete from
+		<include refid="base_table" />
+		where id=#{id}
+	</delete>
+
+	<!-- 批量删除信息 -->
+	<delete id="delBatch" parameterType="Object">
+		delete from
+		<include refid="base_table" />
+		where
+		<if test="ids != null">
+			id in
+			<foreach item="item" index="index" collection="ids" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			and
+		</if>
+		<if test="id != null">
+			id=#{id} and
+		</if>
+		1=1
+	</delete>
+</mapper> 

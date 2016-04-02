@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhrt.dao.SpinfoDao">
+
+	<!-- 表名 -->
+	<sql id="base_table" > 
+	    infosp
+	</sql>  
+	
+	<!-- 插入字段 -->
+	<sql id="insert_field_list">
+		id,
+		name,
+		synType,
+		codeLen,
+		f_linkid,
+		f_msg,
+		f_spnumber,
+		f_mobile,
+		f_status,
+		f_ext,
+		synUrl,
+		f_answer,
+		createPerson,
+		createTime,
+		lastUpdatePerson,
+		lastUpdateTime
+	</sql>
+
+	<!-- 查询字段 -->
+	<sql id="select_field_list">
+		id,
+		name,
+		synType,
+		codeLen,
+		f_linkid,
+		f_msg,
+		f_spnumber,
+		f_mobile,
+		f_status,
+		f_ext,
+		synUrl,
+		f_answer,
+		createPerson,
+		createTime,
+		lastUpdatePerson,
+		lastUpdateTime
+	</sql>
+	
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+	
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where  1=1 
+			<if test="id != null and id != ''">  
+			 and id=#{id} 
+			</if>
+		    <if test="name != null and name != ''">  
+			 and name=#{name} 
+			</if>
+			<if test="synType != null "> 
+			 and synType=#{synType} 
+			 <!-- and synType like '%${synType}%' -->
+			</if>
+			<if test="codeLen != null">  
+			 and codeLen=#{codeLen} 
+			</if>
+			<if test="f_linkid != null and f_linkid != ''">  
+			 and f_linkid=#{f_linkid} 
+			</if>
+			<if test="f_msg != null and f_msg != ''">  
+			 and f_msg=#{f_msg} 
+			</if>
+			<if test="f_spnumber != null and f_spnumber != ''">  
+			 and f_spnumber=#{f_spnumber} 
+			</if>
+			<if test="f_mobile != null and f_mobile != ''">  
+			 and f_mobile=#{f_mobile} 
+			</if>
+			<if test="f_status != null and f_status != ''">  
+			 and f_status=#{f_status} 
+			</if>
+			<if test="f_ext != null and f_ext != ''">  
+			 and f_ext=#{f_ext} 
+			</if>
+			<if test="synUrl != null and synUrl != ''">  
+			 and synUrl=#{synUrl} 
+			</if>
+			<if test="f_answer != null and f_answer != ''">  
+			 and f_answer=#{f_answer} 
+			</if>
+			<if test="createPerson != null and createPerson != ''">  
+			 and createPerson=#{createPerson} 
+			</if>
+			<if test="createTime != null and createTime != ''">  
+			 and createTime=#{createTime} 
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson != ''">  
+			 and lastUpdatePerson=#{lastUpdatePerson} 
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime != ''">  
+			 and lastUpdateTime=#{lastUpdateTime} 
+			</if>
+	</sql> 
+
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if test="orderBy != null and  orderBy != '' and order != null and  order != '' ">  
+			 order by ${orderBy} ${order} 
+		</if>
+		<if test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">  
+			 limit #{limitB},#{limitNum} 
+		</if>
+	</sql> 
+		
+	<!-- 查询单条数据 -->
+	<select id="get" parameterType="map" resultType="com.zhrt.entity.Spinfo">
+		SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>  
+		<include refid="select_condition_where"/> 
+		limit 1
+	</select> 
+	
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="com.zhrt.entity.Spinfo">
+		SELECT <include refid="select_field_list" />
+		from <include refid="base_table"/>
+		<include refid="select_condition_where"/>
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	<!-- 查询多条数据 -->
+	<select id="getForPage" parameterType="map" resultType="com.zhrt.entity.Spinfo">
+		SELECT 
+		id,
+		name,
+		synType,
+		codeLen,
+		f_linkid,
+		f_msg,
+		f_spnumber,
+		mainFlag,
+		status,
+		f_mobile,
+		f_status,
+		f_ext,
+		synUrl,
+		f_answer,
+		createPerson,
+		createTime,
+		lastUpdatePerson,
+		lastUpdateTime
+		from <include refid="base_table"/>
+		<include refid="select_condition_where"/>
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT <include refid="select_field_count" />
+		from <include refid="base_table"/> 
+		<include refid="select_condition_where"/>
+	</select> 
+	
+	<insert id="add" parameterType="com.zhrt.entity.Spinfo">
+	  <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+	    SELECT UUID_SHORT() as id;   
+	  </selectKey>
+	  insert into  <include refid="base_table" />
+	  ( <include refid="insert_field_list" /> )  
+	 values( 
+		#{id},
+		#{name},
+		#{synType},
+		#{codeLen},
+		#{f_linkid},
+		#{f_msg},
+		#{f_spnumber},
+		#{f_mobile},
+		#{f_status},
+		#{f_ext},
+		#{synUrl},
+		#{f_answer},
+		#{createPerson},
+		#{createTime},
+		#{lastUpdatePerson},
+		#{lastUpdateTime}
+	 )  
+	</insert>  
+
+
+	<!-- 修改信息，只修改只不为空的字段 -->  
+	<update id="update" parameterType="com.zhrt.entity.Spinfo" >  
+	    update <include refid="base_table" /> 
+	    set
+	   		<if test="name != null and name !='null'">  
+			 name=#{name},
+			</if>
+			<if test="synType != null">  
+			 synType=#{synType},
+			</if>
+			<if test="codeLen != null">  
+			 codeLen=#{codeLen},
+			</if>
+			<if test="f_linkid != null and f_linkid !='null'">  
+			 f_linkid=#{f_linkid},
+			</if>
+			<if test="f_msg != null and f_msg !='null'">  
+			 f_msg=#{f_msg},
+			</if>
+			<if test="f_spnumber != null and f_spnumber !='null'">  
+			 f_spnumber=#{f_spnumber},
+			</if>
+			<if test="f_mobile != null and f_mobile !='null'">  
+			 f_mobile=#{f_mobile},
+			</if>
+			<if test="f_status != null and f_status !='null'">  
+			 f_status=#{f_status},
+			</if>
+			<if test="f_ext != null and f_ext !='null'">  
+			 f_ext=#{f_ext},
+			</if>
+			<if test="synUrl != null and synUrl !='null'">  
+			 synUrl=#{synUrl},
+			</if>
+			<if test="f_answer != null and f_answer !='null'">  
+			 f_answer=#{f_answer},
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson !='null'">  
+			 lastUpdatePerson=#{lastUpdatePerson},
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime !='null'">  
+			 lastUpdateTime=#{lastUpdateTime},
+			</if>
+			id=#{id}
+	    where id=#{id}
+	</update>
+	  	
+
+	<!-- 删除信息 -->  
+	<delete id="delById" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where id=#{id}
+	</delete>
+
+	<!-- 批量删除信息 -->  
+	<delete id="delBatch" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where
+	    <if test="ids != null">
+	    	id in
+	    	 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+				#{item}
+			</foreach>  
+			and
+	    </if>
+	    <if test="id != null">
+			id=#{id}  and
+	    </if>
+	    1=1
+	</delete>
+</mapper> 

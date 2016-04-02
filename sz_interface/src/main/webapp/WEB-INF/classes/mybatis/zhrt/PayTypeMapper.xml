@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhrt.dao.PayTypeDAO">
+
+	<!-- 表名 -->
+	<sql id="base_table" > 
+	    paytype
+	</sql>  
+	
+	
+	<!-- 插入字段 -->
+	<sql id="insert_field_list">
+		id,
+		payType,
+		payTypeId,
+		remark,
+		cuser,
+		ctime,
+		uuser,
+		utime
+	 </sql>
+
+
+	<!-- 查询字段 -->
+	<sql id="select_field_list">
+		id as id,
+		payType as payType,            
+		payTypeId as payTypeId,            
+		remark as remark,    
+		cuser as cuser,
+		ctime as ctime,
+		uuser as uuser,
+		utime as utime
+	</sql>
+	
+
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+	
+	
+
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where  1=1 
+		    <if test="id != null and  id != ''">  
+			 and id=#{id} 
+			</if>
+		    <if test="payType != null and  payType != ''">  
+			 and payType=#{payType} 
+			</if>
+		    <if test="payTypeId != null and  payTypeId != ''">  
+			 and payTypeId=#{payTypeId} 
+			</if>
+		    <if test="cuser != null and  cuser != ''">  
+			 and cuser=#{cuser} 
+			</if>
+		    <if test="ctime != null and  ctime != ''">  
+			 and ctime=#{ctime} 
+			</if>
+		    <if test="uuser != null and  uuser != ''">  
+			 and uuser=#{uuser} 
+			</if>
+		    <if test="utime != null and  utime != ''">  
+			 and utime=#{utime} 
+			</if>
+	</sql> 
+
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if test="orderBy != null and  orderBy != '' and order != null and  order != '' ">  
+			 order by ${orderBy} ${order} 
+		</if>
+		<if test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">  
+			 limit #{limitB},#{limitNum} 
+		</if>
+	</sql> 
+	
+	
+	<!-- 查询单条数据 -->
+	<select id="get" parameterType="map" resultType="PayType">
+		SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>  
+		<include refid="select_condition_where"/> 
+		limit 1
+	</select> 
+	
+	
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="PayType">
+		SELECT <include refid="select_field_list" />
+		from <include refid="base_table"/>
+		<include refid="select_condition_where"/>
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT <include refid="select_field_count" />
+		from <include refid="base_table"/> 
+		<include refid="select_condition_where"/>
+	</select> 
+	
+	
+	<insert id="add" parameterType="map" >
+	  <selectKey resultType="string" order="BEFORE" keyProperty="id">  
+	    SELECT UUID_SHORT() as id;
+	  </selectKey> 
+	  insert into  <include refid="base_table" />
+	  ( <include refid="insert_field_list" /> )  
+	 values( 
+		 #{id},
+		 #{paytype},
+		 #{payTypeId},
+		 #{remark},
+		 #{cuser},
+		 #{ctime},
+		 #{uuser},
+		 #{utime}
+	 )  
+	</insert>  
+
+
+	<!-- 修改信息，只修改只不为空的字段 -->  
+	<update id="update" parameterType="Object" >  
+	    update <include refid="base_table" /> 
+	    set
+	    <if test="paytype != null and paytype !='null'">  
+			payType=#{paytype}, 
+		</if>
+	    <if test="payTypeId != null and payTypeId !='null'">  
+			payTypeId=#{payTypeId}, 
+		</if>
+	    <if test="remark != null and remark !='null'">  
+		 	remark=#{remark}, 
+		</if>
+	    <if test="uuser != null and uuser !='null'">  
+			uuser=#{uuser}, 
+		</if>
+	    <if test="utime != null and utime !='null'">  
+			utime=#{utime},
+		</if>
+		id=#{id}
+	    where id=#{id}
+	</update>
+	  	
+
+	<!-- 删除信息 -->  
+	<delete id="delById" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where id=#{id}
+	</delete>
+
+	<!-- 批量删除信息 -->  
+	<delete id="delBatch" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where
+	    <if test="ids != null">
+	    	id in
+	    	 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+				#{item}
+			</foreach>  
+			and
+	    </if>
+	    <if test="id != null">
+			id=#{id}  and
+	    </if>
+	    1=1
+	</delete>
+	
+</mapper> 
