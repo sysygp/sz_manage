@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhrt.dao.PropInfoDao">
+
+	<!-- 表名 -->
+	<sql id="base_table" > 
+	    infoprop
+	</sql>  
+	
+	<!-- 插入字段 -->
+	<sql id="insert_field_list">
+		id,
+		appId,
+		platId,
+		spcodeIds,
+		propName,
+		propFee,
+		propType,
+		payType,
+		feeTipMode,
+		extraMessage,
+		virtualCurrency,
+		createPerson,
+		createTime,
+		lastUpdatePerson,
+		lastUpdateTime,
+		propCode
+	</sql>
+
+	<!-- 查询字段 -->
+	<sql id="select_field_list">
+		id,
+		appId,
+		platId,
+		spcodeIds,
+		propName,
+		propFee,
+		propType,
+		payType,
+		feeTipMode,
+		extraMessage,
+		virtualCurrency,
+		status,
+		createPerson,
+		createTime,
+		lastUpdatePerson,
+		lastUpdateTime,
+		propCode
+	</sql>
+	
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+	
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where  1=1 
+			<if test="id != null and id != ''">  
+			 and id=#{id} 
+			</if>
+			<if test="appId != null and appId != ''">  
+			 and appId=#{appId} 
+			</if>
+			<if test="platId != null and platId != ''">  
+			 and platId=#{platId} 
+			</if>
+			<if test="spcodeIds != null and spcodeIds != ''">  
+			 and spcodeIds=#{spcodeIds} 
+			</if>
+			<if test="propName != null and propName != ''">  
+			 and propName like '%${propName}%'
+			</if>
+			<if test="propFee != null and propFee != ''">  
+			 and propFee=#{propFee} 
+			</if>
+			<if test="propType != null and propType != ''">  
+			 and propType=#{propType} 
+			</if>
+			<if test="payType != null and payType != ''">  
+			 and payType=#{payType} 
+			</if>
+			<if test="feeTipMode != null and feeTipMode != ''">  
+			 and feeTipMode=#{feeTipMode} 
+			</if>
+			<if test="extraMessage != null and extraMessage != ''">  
+			 and extraMessage=#{extraMessage} 
+			</if>
+			<if test="virtualCurrency != null">  
+			 and virtualCurrency=#{virtualCurrency} 
+			</if>
+			<if test="propCode != null">  
+			 and propCode=#{propCode} 
+			</if>
+			<if test="status != null and status != ''">  
+			 and status=#{status} 
+			</if>
+			<if test="createPerson != null and createPerson != ''">  
+			 and createPerson=#{createPerson} 
+			</if>
+			<if test="createTime != null and createTime != ''">  
+			 and createTime=#{createTime} 
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson != ''">  
+			 and lastUpdatePerson=#{lastUpdatePerson} 
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime != ''">  
+			 and lastUpdateTime=#{lastUpdateTime} 
+			</if>
+	</sql> 
+
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if test="orderBy != null and  orderBy != '' and order != null and  order != '' ">  
+			 order by ${orderBy} ${order} 
+		</if>
+		<if test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">  
+			 limit #{limitB},#{limitNum} 
+		</if>
+	</sql> 
+		
+	<!-- 查询单条数据 -->
+	<select id="get" parameterType="map" resultType="com.zhrt.entity.PropInfo">
+		SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>  
+		<include refid="select_condition_where"/> 
+		limit 1
+	</select> 
+	<!-- 查询某个产品下的所有道具 -->
+	<select id="getPropsByAppId" parameterType="map" resultType="com.zhrt.entity.PropInfo">
+	    SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>
+		<include refid="select_condition_where"/> 
+		order by propCode DESC	
+	</select>	
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="com.zhrt.entity.PropInfo">
+		SELECT 
+		p.id,
+		p.appId,
+		a.appName,
+		p.platId,
+		p.spcodeIds,
+		p.propName,
+		p.propFee,
+		p.propType,
+		p.payType,
+		p.feeTipMode,
+		p.extraMessage,
+		p.virtualCurrency,
+		p.status,
+		p.createPerson,
+		p.createTime,
+		p.lastUpdatePerson,
+		p.lastUpdateTime,
+		p.propCode
+		from <include refid="base_table"/> p left join infoapplication a on p.appId = a.id
+		<include refid="select_condition_where"/>
+		and p.status != '3'
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT <include refid="select_field_count" />
+		from <include refid="base_table"/> 
+		<include refid="select_condition_where"/>
+		and status != '3'
+	</select> 
+	
+	<insert id="add" parameterType="com.zhrt.entity.PropInfo">
+	  <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+	    SELECT UUID_SHORT() as id;   
+	  </selectKey>
+	  insert into  <include refid="base_table" />
+	  ( <include refid="insert_field_list" /> )  
+	 values( 
+		#{id},
+		#{appId},
+		#{platId},
+		#{spcodeIds},
+		#{propName},
+		#{propFee},
+		#{propType},
+		#{payType},
+		#{feeTipMode},
+		#{extraMessage},
+		#{virtualCurrency},
+		#{createPerson},
+		#{createTime},
+		#{lastUpdatePerson},
+		#{lastUpdateTime},
+		#{propCode}
+	 )  
+	</insert>  
+
+
+	<!-- 修改信息，只修改只不为空的字段 -->  
+	<update id="update" parameterType="com.zhrt.entity.PropInfo" >  
+	    update <include refid="base_table" /> 
+	    set
+			<if test="appId != null and appId !='null'">  
+			 appId=#{appId},
+			</if>
+			<if test="platId != null and platId !='null'">  
+			 platId=#{platId},
+			</if>
+			<if test="spcodeIds != null and spcodeIds !='null'">  
+			 spcodeIds=#{spcodeIds},
+			</if>
+			<if test="propName != null and propName!='null'">  
+			 propName=#{propName}, 
+			</if>
+			<if test="propFee != null and propFee!='null'">  
+			 propFee=#{propFee}, 
+			</if>
+			<if test="propType != null and propType !='null'">  
+			 propType=#{propType},
+			</if>
+			<if test="payType != null and payType !='null'">  
+			 payType=#{payType},
+			</if>
+			<if test="feeTipMode != null and feeTipMode !='null'">  
+			 feeTipMode=#{feeTipMode},
+			</if>
+			<if test="extraMessage != null and extraMessage !='null'">  
+			 extraMessage=#{extraMessage},
+			</if>
+			<if test="virtualCurrency != null">  
+			 virtualCurrency=#{virtualCurrency},
+			</if>
+			<if test="propCode != null">  
+			 propCode=#{propCode},
+			</if>
+			<if test="status != null and status !='null'">  
+			 status=#{status},
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson !='null'">  
+			 lastUpdatePerson=#{lastUpdatePerson},
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime !='null'">  
+			 lastUpdateTime=#{lastUpdateTime} ,
+			</if>
+			id=#{id}
+	    where id=#{id}
+	</update>
+	  	
+
+	<!-- 删除信息 -->  
+	<delete id="delById" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where id=#{id}
+	</delete>
+
+	<!-- 批量删除信息 -->  
+	<delete id="delBatch" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where
+	    <if test="ids != null">
+	    	id in
+	    	 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+				#{item}
+			</foreach>  
+			and
+	    </if>
+	    <if test="id != null">
+			id=#{id}  and
+	    </if>
+	    1=1
+	</delete>
+</mapper> 

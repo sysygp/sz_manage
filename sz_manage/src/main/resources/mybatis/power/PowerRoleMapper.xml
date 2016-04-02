@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.power.dao.PowerRoleDao">
+
+	<sql id="base_table" > 
+	    power_role
+	</sql>  
+	
+	
+	<sql id="insert_field_list">
+		id,
+		name,
+		status,
+		domainId,
+		platId
+	 </sql>
+
+
+	<sql id="select_field_list">
+		id,
+		name,
+		status,
+		domainId,
+		platId
+	</sql>
+
+
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+	
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where  1=1 
+		    <if test="id != null and  id != ''">  
+			 and id=#{id} 
+			</if>
+		    <if test="name != null and  name != ''">  
+			 and name=#{name} 
+			</if>
+		    <if test="status != null">  
+			 and status=#{status} 
+			</if>
+		    <if test="domainId != null">  
+			 and domainId=#{domainId} 
+			</if>
+		    <if test="platId != null">  
+			 and platId=#{platId} 
+			</if>
+	</sql> 
+	
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if test="orderBy != null and  orderBy != '' and order != null and  order != '' ">  
+			 order by ${orderBy} ${order} 
+		</if>
+		<if test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">  
+			 limit #{limitB},#{limitNum} 
+		</if>
+	</sql> 
+
+
+	<select id="get" parameterType="map" resultType="PowerRole">
+		SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>  
+		<include refid="select_condition_where"/> 
+		limit 1
+	</select> 
+	
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="PowerRole">
+		SELECT <include refid="select_field_list" />
+		from <include refid="base_table"/>
+		<include refid="select_condition_where"/>
+		<include refid="select_condition_orderlimit" />
+	</select>
+	
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT <include refid="select_field_count" />
+		from <include refid="base_table"/> 
+		<include refid="select_condition_where"/>
+	</select> 
+	
+	
+	<insert id="add" parameterType="map" > 
+	  <selectKey resultType="string" order="BEFORE" keyProperty="id">  
+	    SELECT UUID_SHORT() as id ;   
+	  </selectKey>    
+	  insert into  <include refid="base_table" />
+	  ( <include refid="insert_field_list" /> )  
+	 values( 
+		#{id},
+		#{name},
+		#{status},
+		#{domainId},
+		#{platId}
+	 )  
+	</insert>  
+
+
+	<!-- 修改账户信息，只修改只不为空的字段 -->  
+	<update id="update" parameterType="Object" >  
+	    update <include refid="base_table" /> 
+	    set  
+	    <if test="name != null and name!='null'">  
+			name=#{name},  
+	    </if> 
+	    <if test="status != null">  
+			status=#{status},  
+	    </if> 
+	    <if test="domainId != null and domainId !='null'">  
+			domainId=#{domainId},  
+	    </if> 
+	    <if test="platId != null">  
+			platId=#{platId},  
+	    </if> 
+	    	id=id 
+	    where id=#{id}   
+	</update>
+	  	
+	<!-- 删除信息 -->  
+	<delete id="delById" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where id=#{id}
+	</delete>
+
+	<!-- 批量删除信息 -->  
+	<delete id="delMul" parameterType="Object">
+		update <include refid="base_table" />  
+		set status=#{status}
+	    where
+	    <if test="ids != null">
+	    	id in
+	    	 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+				#{item}
+			</foreach>  
+			and
+	    </if>
+	    <if test="id != null">
+			id=#{id}  and
+	    </if>
+	    1=1
+	</delete>
+</mapper> 

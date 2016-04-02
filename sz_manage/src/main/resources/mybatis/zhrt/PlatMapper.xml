@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhrt.dao.PlatDAO">
+
+	<!-- 表名 -->
+	<sql id="base_table" > 
+	    plat
+	</sql>  
+	
+	<!-- 插入字段 -->
+	<sql id="insert_field_list">
+		id,
+		platid,
+		platname,
+		platkey,
+		remark,
+		channelId,
+		cnName,
+		cpId,
+		cpName,
+		cuser,
+		ctime,
+		uuser,
+		utime
+	</sql>
+
+	<!-- 查询字段 -->
+	<sql id="select_field_list">
+		id as id,
+		platid as platid,            
+		platname as platname,    
+		platkey as platkey,    
+		remark as remark,
+		channelId as channelId,
+		cnName as cnName,
+		cpId as cpId,
+		cpName as cpName,
+		cuser as cuser,
+		ctime as ctime,
+		uuser as uuser,
+		utime as utime
+	</sql>
+	
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+	
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where  1=1 
+			<if test="id != null and  id != ''">  
+			 and id=#{id} 
+			</if>
+		    <if test="platid != null">  
+			 and platid=#{platid} 
+			</if>
+		    <if test="platname != null and  platname != ''">  
+			 and platname=#{platname} 
+			</if>
+		    <if test="platkey != null and  platkey != ''">  
+			 and platkey=#{platkey} 
+			</if>
+		    <if test="remark != null and  remark != ''">  
+			 and remark=#{remark} 
+			</if>
+		    <if test="channelId != null and  channelId != ''">  
+			 and channelId=#{channelId} 
+			</if>
+		    <if test="cnName != null and  cnName != ''">  
+			 and cnName=#{cnName} 
+			</if>
+		    <if test="cpId != null and  cpId != ''">  
+			 and cpId=#{cpId} 
+			</if>
+		    <if test="cpName != null and  cpName != ''">  
+			 and cpName=#{cpName} 
+			</if>
+		    <if test="cuser != null and  cuser != ''">  
+			 and cuser=#{cuser} 
+			</if>
+		    <if test="ctime != null and  ctime != ''">  
+			 and ctime=#{ctime} 
+			</if>
+		    <if test="uuser != null and  uuser != ''">  
+			 and uuser=#{uuser} 
+			</if>
+		    <if test="utime != null and  utime != ''">  
+			 and utime=#{utime} 
+			</if>
+	</sql> 
+
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if test="orderBy != null and  orderBy != '' and order != null and  order != '' ">  
+			 order by ${orderBy} ${order} 
+		</if>
+		<if test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">  
+			 limit #{limitB},#{limitNum} 
+		</if>
+	</sql> 
+		
+	<!-- 查询单条数据 -->
+	<select id="get" parameterType="map" resultType="Plat">
+		SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>  
+		<include refid="select_condition_where"/> 
+		limit 1
+	</select> 
+	
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="Plat">
+		SELECT <include refid="select_field_list" />
+		from <include refid="base_table"/>
+		<include refid="select_condition_where"/>
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT <include refid="select_field_count" />
+		from <include refid="base_table"/> 
+		<include refid="select_condition_where"/>
+	</select> 
+	
+	<insert id="add" parameterType="map">
+	  <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="platid">  
+	    SELECT last_insert_id() as signId;
+	  </selectKey>
+	  insert into  <include refid="base_table" />
+	  ( <include refid="insert_field_list" /> )  
+	 values( 
+		 UUID_SHORT(),
+		 #{platid},
+		 #{platname},
+		 #{platkey},
+		 #{remark},
+		 #{channelId},
+		 #{cnName},
+		 #{cpId},
+		 #{cpName},
+		 #{cuser},
+		 #{ctime},
+		 #{uuser},
+		 #{utime}
+	 )  
+	</insert>  
+	<update id="addPartTable" parameterType="map">
+	  ${sql}
+	</update>  
+
+
+	<!-- 修改平台信息，只修改只不为空的字段 -->  
+	<update id="update" parameterType="Object" >  
+	    update <include refid="base_table" /> 
+	    set
+	    <if test="platid != null">  
+			platid=#{platid},
+	    </if> 
+	    <if test="platname != null and platname!='null'">  
+			platname=#{platname},
+	    </if> 
+	    <if test="remark != null and remark !='null'">  
+			remark=#{remark},
+	    </if>  
+	    <if test="channelId != null and channelId !='null'">  
+			channelId=#{channelId},
+	    </if>  
+	    <if test="cnName != null and cnName !='null'">  
+			cnName=#{cnName},
+	    </if>  
+	    <if test="cpId != null and cpId!='null'">  
+			cpId=#{cpId},
+	    </if>  
+	    <if test="cpName != null and cpName!='null'">  
+			cpName=#{cpName},
+	    </if> 
+	    <if test="uuser != null and uuser !='null'">  
+			uuser=#{uuser},
+	    </if>
+	    <if test="utime != null and utime !='null'">  
+			utime=#{utime},
+	    </if>
+	    id=#{id}
+	    where id=#{id}
+	</update>
+	  	
+
+	<!-- 删除平台信息 -->  
+	<delete id="delById" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where id=#{id}
+	</delete>
+
+	<!-- 批量删除平台信息 -->  
+	<delete id="delBatch" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where
+	    <if test="ids != null">
+	    	id in
+	    	 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+				#{item}
+			</foreach>  
+			and
+	    </if>
+	    <if test="id != null">
+			id=#{id}  and
+	    </if>
+	    1=1
+	</delete>
+	
+	<!-- 创建用户分表 -->
+	<parameterMap type="map" id="vo">
+		<parameter property="platid" jdbcType="VARCHAR" mode="IN" />
+	</parameterMap> 
+	<select id="createUserTables" parameterMap="vo" resultType="map" statementType="CALLABLE">
+		{CALL PROC_CREATE_USER_TABLES(
+			?
+		)}
+	</select> 
+</mapper> 

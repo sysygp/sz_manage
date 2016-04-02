@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhrt.dao.ChannelAppInfoDao">
+
+	<!-- 表名 -->
+	<sql id="base_table" > 
+	    infochannelappl
+	</sql>  
+	
+	<!-- 插入字段 -->
+	<sql id="insert_field_list">
+		id,
+		platId,
+		myepayChanAppId,
+		myepayAppId,
+		appName,
+		appType,
+		cpId,
+		appId,
+		channelId,
+		myepayChannelId,
+		myepayChannelCode,
+		sdkVer,
+		description,
+		mainFlag,
+		verId,
+		verNumber,
+		fileName,
+		fileType,
+		fileLen,
+		downUrl,
+		myepaySdkVer,
+		chanAppVerSeq,
+		createPerson,
+		createTime,
+		lastUpdatePerson,
+		lastUpdateTime
+	</sql>
+
+	<!-- 查询字段 -->
+	<sql id="select_field_list">
+		id,
+		platId,
+		myepayChanAppId,
+		myepayAppId,
+		appName,
+		appType,
+		cpId,
+		appId,
+		channelId,
+		myepayChannelId,
+		myepayChannelCode,
+		sdkVer,
+		status,
+		description,
+		mainFlag,
+		verId,
+		verNumber,
+		fileName,
+		fileType,
+		fileLen,
+		downUrl,
+		myepaySdkVer,
+		chanAppVerSeq,
+		createPerson,
+		createTime,
+		lastUpdatePerson,
+		lastUpdateTime
+	</sql>
+	
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+	
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where  1=1 
+			<if test="id != null and id != ''">  
+			 and id=#{id} 
+			</if>
+			<if test="platId != null and platId != ''">  
+			 and platId=#{platId} 
+			</if>
+			<if test="myepayChanAppId != null and myepayChanAppId != ''">  
+			 and myepayChanAppId=#{myepayChanAppId} 
+			</if>
+			<if test="myepayAppId != null and myepayAppId != ''">  
+			 and myepayAppId=#{myepayAppId} 
+			</if>
+			<if test="appName != null and appName != ''">  
+			 and appName like '%${appName}%'  
+			</if>
+			<if test="appType != null and appType != ''">  
+			 and appType=#{appType} 
+			</if>
+			<if test="cpId != null and cpId != ''">  
+			 and cpId=#{cpId} 
+			</if>
+			<if test="appId != null and appId != ''">  
+			 and appId=#{appId} 
+			</if>
+			<if test="channelId != null and channelId != ''">  
+			 and channelId=#{channelId} 
+			</if>
+			<if test="myepayChannelId != null and myepayChannelId != ''">  
+			 and myepayChannelId=#{myepayChannelId} 
+			</if>
+			<if test="myepayChannelCode != null and myepayChannelCode != ''">  
+			 and myepayChannelCode=#{myepayChannelCode} 
+			</if>
+			<if test="sdkVer != null and sdkVer != ''">  
+			 and sdkVer=#{sdkVer} 
+			</if>
+			<if test="status != null and status != ''">  
+			 and status=#{status} 
+			</if>
+			<if test="verId != null and verId != ''">  
+			 and verId=#{verId} 
+			</if>
+			<if test="verNumber != null and verNumber != ''">  
+			 and verNumber=#{verNumber} 
+			</if>
+			<if test="fileName != null and fileName != ''">  
+			 and fileName=#{fileName} 
+			</if>
+			<if test="fileType != null and fileType != ''">  
+			 and fileType=#{fileType} 
+			</if>
+			<if test="fileLen != null and fileLen != ''">  
+			 and fileLen=#{fileLen} 
+			</if>
+			<if test="downUrl != null and downUrl != ''">  
+			 and downUrl=#{downUrl} 
+			</if>
+			<if test="myepaySdkVer != null and myepaySdkVer != ''">  
+			 and myepaySdkVer=#{myepaySdkVer} 
+			</if>
+			<if test="description != null and description != ''">  
+			 and description=#{description} 
+			</if>
+			<if test="chanAppVerSeq != null">  
+			 and chanAppVerSeq=#{chanAppVerSeq} 
+			</if>
+			<if test="createPerson != null and createPerson != ''">  
+			 and createPerson=#{createPerson} 
+			</if>
+			<if test="createTime != null and createTime != ''">  
+			 and createTime=#{createTime} 
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson != ''">  
+			 and lastUpdatePerson=#{lastUpdatePerson} 
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime != ''">  
+			 and lastUpdateTime=#{lastUpdateTime} 
+			</if>			
+	</sql> 
+
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if test="orderBy != null and  orderBy != '' and order != null and  order != '' ">  
+			 order by ${orderBy} ${order} 
+		</if>
+		<if test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">  
+			 limit #{limitB},#{limitNum} 
+		</if>
+	</sql> 
+		
+	<!-- 查询单条数据 -->
+	<select id="get" parameterType="map" resultType="com.zhrt.entity.ChannelAppInfo">
+		SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>  
+		<include refid="select_condition_where"/> 
+		limit 1
+	</select> 
+	
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="com.zhrt.entity.ChannelAppInfo">
+		SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>
+		where 1=1
+		<if test="channelId != null and channelId != ''">  		
+		   and channelId = #{channelId}
+	    </if>
+		<if test="cpId != null and cpId != ''">  			
+		   and cpId=#{cpId}
+	    </if>
+		<if test="appId != null and appId != ''">  			
+		   and appId=#{appId}
+	    </if>
+		and status != '3'
+		order by createTime desc
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT <include refid="select_field_count" /> 
+		from <include refid="base_table"/>
+		where 1=1
+		<if test="channelId != null and channelId != ''">  		
+		   and channelId = #{channelId}
+	    </if>
+		<if test="cpId != null and cpId != ''">  			
+		   and cpId=#{cpId}
+	    </if>
+		<if test="appId != null and appId != ''">  			
+		   and appId=#{appId}
+	    </if>
+		and status != '3'
+	</select> 
+	
+	<insert id="add" parameterType="com.zhrt.entity.ChannelAppInfo">
+	  <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+	    SELECT UUID_SHORT() as id;   
+	  </selectKey>
+	  insert into  <include refid="base_table" />
+	  ( <include refid="insert_field_list" /> )  
+	 values( 
+		#{id},
+		#{platId},
+		#{myepayChanAppId},
+		#{myepayAppId},
+		#{appName},
+		#{appType},
+		#{cpId},
+		#{appId},
+		#{channelId},
+		#{myepayChannelId},
+		#{myepayChannelCode},
+		#{sdkVer},
+		#{description},
+		#{mainFlag},
+		#{verId},
+		#{verNumber},
+		#{fileName},
+		#{fileType},
+		#{fileLen},
+		#{downUrl},
+		#{myepaySdkVer},
+		#{chanAppVerSeq},
+		#{createPerson},
+		#{createTime},
+		#{lastUpdatePerson},
+		#{lastUpdateTime}
+	 )  
+	</insert>  
+
+
+	<!-- 修改信息，只修改只不为空的字段 -->  
+	<update id="update" parameterType="com.zhrt.entity.ChannelAppInfo" >  
+	    update <include refid="base_table" /> 
+	    set
+			<if test="platId != null and platId !='null'">  
+			 platId=#{platId}, 
+			</if>
+			<if test="myepayChanAppId != null and myepayChanAppId !='null'">  
+			 myepayChanAppId=#{myepayChanAppId}, 
+			</if>
+			<if test="myepayAppId != null and myepayAppId !='null'">  
+			 myepayAppId=#{myepayAppId}, 
+			</if>
+			<if test="appName != null and appName !='null'">  
+			 appName=#{appName}, 
+			</if>
+			<if test="appType != null and appType !='null'">  
+			 appType=#{appType}, 
+			</if>
+			<if test="cpId != null and cpId !='null'">  
+			 cpId=#{cpId}, 
+			</if>
+			<if test="appId != null and appId !='null'">  
+			 appId=#{appId}, 
+			</if>
+			<if test="channelId != null and channelId !='null'">  
+			 channelId=#{channelId}, 
+			</if>
+			<if test="myepayChannelId != null and myepayChannelId !='null'">  
+			 myepayChannelId=#{myepayChannelId}, 
+			</if>
+			<if test="myepayChannelCode != null and myepayChannelCode !='null'">  
+			 myepayChannelCode=#{myepayChannelCode}, 
+			</if>
+			<if test="sdkVer != null and sdkVer !='null'">  
+			 sdkVer=#{sdkVer}, 
+			</if>
+			<if test="status != null and status !='null'">  
+			 status=#{status}, 
+			</if>
+			<if test="verId != null and verId !='null'">  
+			 verId=#{verId}, 
+			</if>
+			<if test="verNumber != null and verNumber !='null'">  
+			 verNumber=#{verNumber}, 
+			</if>
+			<if test="fileName != null and fileName !='null'">  
+			 fileName=#{fileName}, 
+			</if>
+			<if test="fileType != null and fileType !='null'">  
+			 fileType=#{fileType}, 
+			</if>
+			<if test="fileLen != null and fileLen !='null'">  
+			 fileLen=#{fileLen}, 
+			</if>
+			<if test="downUrl != null and downUrl !='null'">  
+			 downUrl=#{downUrl}, 
+			</if>
+			<if test="myepaySdkVer != null and myepaySdkVer !='null'">  
+			 myepaySdkVer=#{myepaySdkVer}, 
+			</if>
+			<if test="description != null and description !='null'">  
+			 description=#{description}, 
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson !='null'">  
+			 lastUpdatePerson=#{lastUpdatePerson}, 
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime !='null'">  
+			 lastUpdateTime=#{lastUpdateTime},
+			</if>
+			id=#{id}
+	    where id=#{id}
+	</update>
+	
+	<!-- 渠道下线时，渠道下的所有运营产品下线 -->
+	<update id="updateByChannelId" parameterType="java.util.Map">
+		update <include refid="base_table"/>
+		set 
+			status= #{status}
+		where 
+			channelId = #{channelId}
+	</update>
+	
+	<!--产品下线时，渠道产品修改为下线状态  -->
+	<update id="updateByAppId" parameterType="java.util.Map">
+		update <include refid="base_table" /> 
+	    set
+	    	status = #{status}
+	    where 
+			appId = #{appId}
+	</update>
+	
+	<!--产品版本下线时，渠道产品修改为下线状态  -->
+	<update id="updateByVerId" parameterType="java.util.Map">
+		update <include refid="base_table"/>
+		set
+			status = #{status}
+		where
+			verId = #{verId}
+	</update>
+
+	<!-- 删除信息 -->  
+	<delete id="delById" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where id=#{id}
+	</delete>
+
+	<!-- 批量删除信息 -->  
+	<delete id="delBatch" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where
+	    <if test="ids != null">
+	    	id in
+	    	 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+				#{item}
+			</foreach>  
+			and
+	    </if>
+	    <if test="id != null">
+			id=#{id}  and
+	    </if>
+	    1=1
+	</delete>
+	
+	<!-- 批量更新渠道产品状态 -->
+	<update id="updateBatch" parameterType="java.lang.Object">
+		update <include refid="base_table"/>
+		set 
+			status = #{status}
+		where id in
+			<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+				#{item}
+			</foreach>  
+			and 1=1
+	</update>
+</mapper> 

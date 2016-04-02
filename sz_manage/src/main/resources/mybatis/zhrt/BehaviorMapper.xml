@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhrt.dao.BehaviorDao">
+
+	<!-- 表名 -->
+	<sql id="base_table" > 
+	    behavior
+	</sql>  
+	
+	<!-- 插入字段 -->
+	<sql id="insert_field_list">
+		id,
+		userid,
+		userType,
+		phone,
+		province,
+		provinceName,
+		accountid,
+		behavId,
+		behavName,
+		platid,
+		platname,
+		imei,
+		imsi,
+		mac,
+		termType,	
+		termModel,	
+		version,
+		longitude,
+		latitude,
+		mobileTime,
+		createTime,
+		chanAppVerSeq,
+		cpId,
+		appId,
+		verId,
+		channelId,
+		sdkVer
+	 </sql>
+
+
+	<!-- 查询字段 -->
+	<sql id="select_field_list">
+		id,
+		userid,
+		userType,
+		phone,
+		province,
+		provinceName,
+		accountid,
+		behavId,
+		behavName,
+		platid,
+		platname,
+		imei,
+		imsi,
+		mac,
+		termType,	
+		termModel,	
+		version,
+		longitude,
+		latitude,
+		mobileTime,
+		createTime,
+		chanAppVerSeq,
+		cpId,
+		appId,
+		verId,
+		channelId,
+		sdkVer
+	</sql>
+	
+
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+	
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where  1=1 
+			<if test="id != null and id != ''">  
+			 and id=#{id} 
+			</if>
+		    <if test="userid != null and userid != ''">  
+			 and userid=#{userid} 
+			</if>
+		    <if test="userType != null and userType !=''">  
+			 and userType=#{userType} 
+			</if>
+		    <if test="phone != null and phone != ''">  
+			 and phone=#{phone} 
+			</if>
+		    <if test="province != null and province != ''">  
+			 and province=#{province} 
+			</if>
+		    <if test="provinceName != null and provinceName != ''">  
+			 and provinceName=#{provinceName} 
+			</if>
+		    <if test="accountid != null and accountid != ''">  
+			 and accountid=#{accountid} 
+			</if>
+		    <if test="behavId != null and behavId != ''">  
+			 and behavId=#{behavId} 
+			</if>
+		    <if test="behavName != null and behavName != ''">  
+			 and behavName=#{behavName} 
+			</if>
+		    <if test="platid != null and platid != ''">  
+			 and platid=#{platid} 
+			</if>
+		    <if test="platname != null and platname != ''">  
+			 and platname=#{platname} 
+			</if>
+		    <if test="imei != null and imei != ''">  
+			 and imei=#{imei} 
+			</if>
+		    <if test="imsi != null and imsi != ''">  
+			 and imsi=#{imsi} 
+			</if>
+		    <if test="mac != null and mac != ''">  
+			 and mac=#{mac} 
+			</if>
+		    <if test="termType != null and termType !=''">  
+			 and termType=#{termType} 
+			</if>
+		    <if test="termModel != null and termModel != ''">  
+			 and termModel=#{termModel} 
+			</if>
+		    <if test="version != null and version != ''">  
+			 and version=#{version} 
+			</if>
+		    <if test="longitude != null and longitude != ''">  
+			 and longitude=#{longitude} 
+			</if>
+		    <if test="latitude != null and latitude != ''">  
+			 and latitude=#{latitude} 
+			</if>
+		    <if test="mobileTime != null and mobileTime != ''">  
+			 and mobileTime=#{mobileTime} 
+			</if>
+			<if test="mobileTimeStart != null and mobileTimeStart != ''">  
+			 and date_format(mobileTime,'%Y-%m-%d') &gt;= #{mobileTimeStart} 
+			</if>
+			<if test="mobileTimeEnd != null and mobileTimeEnd != ''">  
+			 and date_format(mobileTime,'%Y-%m-%d') &lt;= #{mobileTimeEnd} 
+			</if>
+		    <if test="createTime != null and createTime != ''">  
+			 and createTime=#{createTime} 
+			</if>
+			<if test="chanAppVerSeq != null and chanAppVerSeq != ''">  
+			 and chanAppVerSeq=#{chanAppVerSeq} 
+			</if>
+			<if test="cpId != null and cpId != ''">  
+			 and cpId=#{cpId} 
+			</if>
+			<if test="appId != null and appId != ''">  
+			 and appId=#{appId} 
+			</if>
+			<if test="verId != null and verId != ''">  
+			 and verId=#{verId} 
+			</if>
+			<if test="channelId != null and channelId != ''">  
+			 and channelId=#{channelId} 
+			</if>
+			<if test="sdkVer != null and sdkVer != ''">  
+			 and sdkVer=#{sdkVer} 
+			</if>
+	</sql> 
+
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if test="orderBy != null and  orderBy != '' and order != null and  order != '' ">  
+			 order by ${orderBy} ${order} 
+		</if>
+		<if test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">  
+			 limit ${limitB},${limitNum} 
+		</if>
+	</sql> 
+		
+	<!-- 查询单条数据 -->
+	<select id="get" parameterType="map" resultType="Behavior">
+		SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>  
+		<include refid="select_condition_where"/> 
+		limit 1
+	</select> 
+	
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="Behavior">
+		SELECT <include refid="select_field_list" />
+		from <include refid="base_table"/>
+		<include refid="select_condition_where"/>
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT <include refid="select_field_count" />
+		from <include refid="base_table"/> 
+		<include refid="select_condition_where"/>
+	</select> 
+	
+	
+	<insert id="add" parameterType="map" > 
+	  <selectKey resultType="string" order="BEFORE" keyProperty="id">  
+	    SELECT UUID_SHORT() as id;
+	  </selectKey> 
+	  insert into  <include refid="base_table" />
+	  ( <include refid="insert_field_list" /> )  
+	 values( 
+		 #{id},
+		 #{userid},
+		 #{userType},
+		 #{phone},
+		 #{province},
+		 #{provinceName},
+		 #{accountid},
+		 #{behavId},
+		 #{behavName},
+		 #{platid},
+		 #{platname},
+		 #{imei},
+		 #{imsi},
+		 #{mac},
+		 #{termType},
+		 #{termModel},
+		 #{version},
+		 #{longitude},
+		 #{latitude},
+		 #{mobileTime},
+		 #{createTime},
+		 #{chanAppVerSeq},
+		 #{cpId},
+		 #{appId},
+		 #{verId},
+		 #{channelId},
+		 #{sdkVer}
+	 )  
+	</insert>  
+
+
+	<!-- 修改信息，只修改只不为空的字段 -->  
+	<update id="update" parameterType="Object" >  
+	    update <include refid="base_table" /> 
+	    set
+	     <if test="userid != null and userid !='null'">  
+			userid=#{userid},
+	    </if> 
+	    <if test="userType != null and userType !='null'">  
+			userType=#{userType},
+	    </if> 
+	    <if test="phone != null and phone !='null'">  
+			phone=#{phone},
+	    </if> 
+	    <if test="province != null and province !='null'">  
+			province=#{province},
+	    </if> 
+	    <if test="provinceName != null and provinceName !='null'">  
+			provinceName=#{provinceName},
+	    </if> 
+	    <if test="accountid != null and accountid !='null'">  
+			accountid=#{accountid},
+	    </if> 
+	    <if test="behavId != null and behavId !='null'">  
+			behavId=#{behavId},
+	    </if> 
+	    <if test="behavName != null and behavName !='null'">  
+			behavName=#{behavName},
+	    </if> 
+	    <if test="platid != null and platid !='null'">  
+			platid=#{platid},
+	    </if> 
+	    <if test="platname != null and platname !='null'">  
+			platname=#{platname},
+	    </if> 
+	    <if test="imei != null and imei !='null'">  
+			imei=#{imei},
+	    </if> 
+	    <if test="imsi != null and imsi !='null'">  
+			imsi=#{imsi},
+	    </if> 
+	    <if test="mac != null and mac !='null'">  
+			mac=#{mac},
+	    </if> 
+	    <if test="termType != null">  
+			termType=#{termType},
+	    </if> 
+	    <if test="termModel != null and termModel != 'null'">  
+			termModel=#{termModel},
+	    </if> 
+	    <if test="version != null and version !='null'">  
+			version=#{version},
+	    </if> 
+	    <if test="longitude != null and longitude !='null'">  
+			longitude=#{longitude},
+	    </if> 
+	    <if test="latitude != null and latitude!='null'">  
+			latitude=#{latitude},
+	    </if> 
+	    <if test="mobileTime != null and mobileTime !='null'">  
+			mobileTime=#{mobileTime},
+	    </if> 
+	    <if test="chanAppVerSeq != null">  
+			chanAppVerSeq=#{chanAppVerSeq},
+	    </if> 
+	    <if test="cpId != null and cpId !='null'">  
+			cpId=#{cpId},
+	    </if> 
+	    <if test="appId != null and appId !='null'">  
+			appId=#{appId},
+	    </if> 
+	    <if test="verId != null and verId !='null'">  
+			verId=#{verId},
+	    </if> 
+	    <if test="channelId != null and channelId !='null'">  
+			channelId=#{channelId},
+	    </if> 
+	    <if test="sdkVer != null and sdkVer !='null'">  
+			sdkVer=#{sdkVer},
+	    </if>
+	    <if test="createTime != null and createTime !='null'">  
+			createTime=#{createTime},
+	    </if> 
+	    id=#{id}
+	    where id=#{id}
+	</update>
+	  	
+
+	<!-- 删除用户行为类型信息 -->  
+	<delete id="delById" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where id=#{id}
+	</delete>
+
+	<!-- 批量删除用户行为类型信息 -->  
+	<delete id="delBatch" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where
+	    <if test="ids != null">
+	    	id in
+	    	 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+				#{item}
+			</foreach>  
+			and
+	    </if>
+	    <if test="id != null">
+			id=#{id}  and
+	    </if>
+	    1=1
+	</delete>
+</mapper> 

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhrt.dao.NoticeInfoDao">
+
+	<!-- 表名 -->
+	<sql id="base_table">
+		infonotice
+	</sql>
+
+	<!-- 插入字段 -->
+	<sql id="insert_field_list">
+		id ,
+		noticeTitle ,
+		noticeType ,
+		noticeContent ,
+		noticeLinkAddr,
+		noticeStatus ,
+		noticeBegin ,
+		noticeEnd ,
+		cpId ,
+		appId ,
+		appName,
+		appVerId ,
+		channelId ,
+		cuser ,
+		ctime ,
+		uuser ,
+		utime
+
+	</sql>
+
+	<!-- 查询字段 -->
+	<sql id="select_field_list">
+		id ,
+		noticeTitle ,
+		noticeType ,
+		noticeContent ,
+		noticeLinkAddr,
+		noticeStatus ,
+		noticeBegin ,
+		noticeEnd ,
+		cpId ,
+		appId ,
+		appName,
+		appVerId ,
+		channelId ,
+		cuser ,
+		ctime ,
+		uuser ,
+		utime
+	</sql>
+	
+
+
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where 1=1
+		<if test="id != null and id != ''">
+			and id=#{id}
+		</if>
+		<if test="noticeTitle != null and noticeTitle != ''">
+			and noticeTitle like '%${noticeTitle}%'
+		</if>
+		<if test="noticeType != null  and noticeType != ''">
+			and noticeType=#{noticeType}
+		</if>
+		<if test="noticeContent != null and noticeContent != ''">
+			and noticeContent=#{noticeContent}
+		</if>
+		<if test="noticeLinkAddr != null and noticeLinkAddr != ''">
+			and noticeLinkAddr=#{noticeLinkAddr}
+		</if>
+		<if test="noticeStatus != null and noticeStatus != ''">
+			and noticeStatus=#{noticeStatus}
+		</if>
+		<if test="noticeBegin != null and noticeBegin != ''">
+			and noticeBegin=#{noticeBegin}
+		</if>
+		<if test="noticeEnd != null and noticeEnd != ''">
+			and noticeEnd=#{noticeEnd}
+		</if>
+		<if test="cpId != null and cpId != ''">
+			and cpId=#{cpId}
+		</if>
+		<if test="appId != null and appId != ''">
+			and appId=#{appId}
+		</if>
+		<if test="appName != null and appName != ''">
+			and appName like '%${appName}%'
+		</if>
+		<if test="appVerId != null and appVerId != ''">
+			and appVerId=#{appVerId}
+		</if>
+		<if test="channelId != null and channelId != ''">
+			and channelId=#{channelId}
+		</if>
+		<if test="cuser != null and cuser != ''">
+			and cuser=#{cuser}
+		</if>
+		<if test="ctime != null and ctime != ''">
+			and ctime=#{ctime}
+		</if>
+		<if test="uuser != null and uuser != ''">
+			and uuser=#{uuser}
+		</if>
+		<if test="utime != null and utime != ''">
+			and utime=#{utime}
+		</if>
+	</sql>
+
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if
+			test="orderBy != null and  orderBy != '' and order != null and  order != '' ">
+			order by ${orderBy} ${order}
+		</if>
+		<if
+			test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">
+			limit ${limitB},${limitNum}
+		</if>
+	</sql>
+
+	<!-- 查询单条数据 -->
+	<select id="get" parameterType="map" resultType="NoticeInfo">
+		SELECT
+		n.id ,
+		n.noticeTitle ,
+		n.noticeType ,
+		n.noticeContent ,
+		n.noticeLinkAddr,
+		n.noticeStatus ,
+		n.noticeBegin ,
+		n.noticeEnd ,
+		n.cpId ,
+		n.appId ,
+		n.appName,
+		n.appVerId ,
+		n.channelId ,
+		n.cuser ,
+		n.ctime ,
+		n.uuser ,
+		n.utime,
+		av.verName as verName,
+		c.cnName as cnName,
+		ift.noticeTypeName as noticeTypeName
+		from
+		<include refid="base_table" /> n
+		left join infoapplversion av on n.appVerId = av.id
+		left join infochannel c on n.channelId = c.id
+		left join infonoticetype ift on n.noticetype = ift.noticeTypeId
+		where 1=1
+		<if test="noticeTitle != null and noticeTitle != ''">
+			and n.noticeTitle like '%${noticeTitle}%'
+		</if>
+		<if test="appName != null and appName != ''">
+			and n.appName like '%${appName}%'
+		</if>
+		and noticeStatus != '3'
+		limit 1
+	</select>
+
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="NoticeInfo">
+		SELECT
+		n.id ,
+		n.noticeTitle ,
+		n.noticeType ,
+		n.noticeContent ,
+		n.noticeLinkAddr,
+		n.noticeStatus ,
+		n.noticeBegin ,
+		n.noticeEnd ,
+		n.cpId ,
+		n.appId ,
+		n.appName,
+		n.appVerId ,
+		n.channelId ,
+		n.cuser ,
+		n.ctime ,
+		n.uuser ,
+		n.utime,
+		av.verName as verName,
+		c.cnName as cnName,
+		ift.noticeTypeName as noticeTypeName
+		from
+		<include refid="base_table" /> n
+		left join infoapplversion av on n.appVerId = av.id
+		left join infochannel c on n.channelId = c.id	
+		left join infonoticetype ift on n.noticetype = ift.noticeTypeId	
+		where 1=1
+		<if test="noticeTitle != null and noticeTitle != ''">
+			and n.noticeTitle like '%${noticeTitle}%'
+		</if>
+		<if test="appName != null and appName != ''">
+			and n.appName like '%${appName}%'
+		</if>
+		and noticeStatus != '3'
+		<include refid="select_condition_orderlimit" />
+	</select>
+    
+
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT
+		<include refid="select_field_count" />
+		from
+		<include refid="base_table" /> n
+		<include refid="select_condition_where" />
+		and noticeStatus != '3'
+	</select>
+
+
+	<insert id="add" parameterType="map">
+		<selectKey resultType="string" order="BEFORE" keyProperty="id">
+			SELECT UUID_SHORT() as id;
+		</selectKey>
+		insert into
+		<include refid="base_table" />
+		(
+		<include refid="insert_field_list" />
+		)
+		values(
+		#{ id},
+		#{ noticeTitle},
+		#{ noticeType},
+		#{ noticeContent },
+		#{ noticeLinkAddr},
+		#{ noticeStatus},
+		#{ noticeBegin},
+		#{ noticeEnd},
+		#{ cpId},
+		#{ appId},
+		#{ appName},
+		#{ appVerId},
+		#{ channelId},
+		#{ cuser},
+		#{ ctime},
+		#{ uuser},
+		#{ utime}
+		)
+	</insert>
+
+
+	<!-- 修改信息，只修改只不为空的字段 -->
+	<update id="update" parameterType="Object">
+		update
+		<include refid="base_table" />
+		set
+		<if test="noticeTitle != null and noticeTitle != ''">
+			 noticeTitle=#{noticeTitle},
+		</if>
+		<if test="noticeType != null  and noticeType != ''">
+			 noticeType=#{noticeType},
+		</if>
+		<if test="noticeContent != null and noticeContent != ''">
+			 noticeContent=#{noticeContent},
+		</if>
+		<if test="noticeLinkAddr != null and noticeLinkAddr != ''">
+			 noticeLinkAddr=#{noticeLinkAddr},
+		</if>
+		<if test="noticeStatus != null and noticeStatus != ''">
+		    noticeStatus=#{noticeStatus},
+		</if>
+		<if test="noticeBegin != null and noticeBegin != ''">
+			noticeBegin=#{noticeBegin},
+		</if>
+		<if test="noticeEnd != null and noticeEnd != ''">
+			 noticeEnd=#{noticeEnd},
+		</if>
+		<if test="cpId != null and cpId != ''">
+			 cpId=#{cpId},
+		</if>
+		<if test="appId != null and appId != ''">
+			appId=#{appId},
+		</if>
+		<if test="appName != null and appName != ''">
+			appName=#{appName},
+		</if>
+		<if test="appVerId != null and appVerId != ''">
+			 appVerId=#{appVerId},
+		</if>
+		<if test="channelId != null and channelId != ''">
+			channelId=#{channelId},
+		</if>
+		<if test="cuser != null and cuser != ''">
+			cuser=#{cuser},
+		</if>
+		<if test="ctime != null and ctime != ''">
+			 ctime=#{ctime},
+		</if>
+		<if test="uuser != null and uuser != ''">
+			 uuser=#{uuser},
+		</if>
+		<if test="utime != null and utime != ''">
+			utime=#{utime},
+		</if>
+		id=#{id}
+		where id=#{id}
+	</update>
+
+
+	<!-- 删除用户行为类型信息 -->
+	<delete id="delById" parameterType="Object">
+		delete from
+		<include refid="base_table" />
+		where id=#{id}
+	</delete>
+
+	<!-- 批量删除用户行为类型信息 -->
+	<delete id="delBatch" parameterType="Object">
+		delete from
+		<include refid="base_table" />
+		where
+		<if test="ids != null">
+			id in
+			<foreach item="item" index="index" collection="ids" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			and
+		</if>
+		<if test="id != null">
+			id=#{id} and
+		</if>
+		1=1
+	</delete>
+</mapper> 

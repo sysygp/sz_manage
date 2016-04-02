@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhrt.dao.CpInfoDao">
+
+	<!-- 表名 -->
+	<sql id="base_table" > 
+	    infocp
+	</sql>  
+	
+	<!-- 插入字段 -->
+	<sql id="insert_field_list">
+		id,
+		cpCode,
+		cpName,
+		fullName,
+		billSyncUrl,
+		compManager,
+		address,
+		companyDesc,
+		userName,
+		passWord,
+		phone,
+		createPerson,
+		createTime,
+		lastUpdatePerson,
+		lastUpdateTime
+	</sql>
+
+	<!-- 查询字段 -->
+	<sql id="select_field_list">
+		id,
+		cpCode,
+		cpName,
+		fullName,
+		billSyncUrl,
+		compManager,
+		address,
+		mainFlag,
+		status,
+		companyDesc,
+		userName,
+		passWord,
+		phone,
+		createPerson,
+		createTime,
+		lastUpdatePerson,
+		lastUpdateTime
+	</sql>
+	
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+	
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where  1=1 
+			<if test="id != null and id != ''">  
+			 and id=#{id} 
+			</if>
+		    <if test="cpCode != null and cpCode != ''">  
+			 and cpCode=#{cpCode} 
+			</if>
+			<if test="cpName != null and cpName != ''">  
+			 and cpName like '%${cpName}%'
+			</if>
+			<if test="fullName != null and fullName != ''">  
+			 and fullName=#{fullName} 
+			</if>
+			<if test="billSyncUrl != null and billSyncUrl != ''">  
+			 and billSyncUrl=#{billSyncUrl} 
+			</if>
+			<if test="compManager != null and compManager != ''">  
+			 and compManager=#{compManager} 
+			</if>
+			<if test="address != null and address != ''">  
+			 and address=#{address} 
+			</if>
+			<if test="status != null and status != ''">  
+			 and status=#{status} 
+			</if>
+			<if test="companyDesc != null and companyDesc != ''">  
+			 and companyDesc=#{companyDesc} 
+			</if>
+			<if test="userName != null and userName != ''">  
+			 and userName=#{userName} 
+			</if>
+			<if test="passWord != null and passWord != ''">  
+			 and passWord=#{passWord} 
+			</if>
+			<if test="phone != null and phone != ''">  
+			 and phone=#{phone} 
+			</if>
+			<if test="createPerson != null and createPerson != ''">  
+			 and createPerson=#{createPerson} 
+			</if>
+			<if test="createTime != null and createTime != ''">  
+			 and createTime=#{createTime} 
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson != ''">  
+			 and lastUpdatePerson=#{lastUpdatePerson} 
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime != ''">  
+			 and lastUpdateTime=#{lastUpdateTime} 
+			</if>
+	</sql> 
+
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if test="orderBy != null and  orderBy != '' and order != null and  order != '' ">  
+			 order by ${orderBy} ${order} 
+		</if>
+		<if test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">  
+			 limit #{limitB},#{limitNum} 
+		</if>
+	</sql> 
+		
+	<!-- 查询单条数据 -->
+	<select id="get" parameterType="map" resultType="com.zhrt.entity.CpInfo">
+		SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>  
+		<include refid="select_condition_where"/> 
+		limit 1
+	</select> 
+	
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="com.zhrt.entity.CpInfo">
+		SELECT <include refid="select_field_list" />
+		from <include refid="base_table"/>
+		<include refid="select_condition_where"/>
+		and status != '3'
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	<!-- 查询多条数据 -->
+	<select id="getForPage" parameterType="map" resultType="com.zhrt.entity.CpInfo">
+		SELECT 
+		cp.id,
+		cp.cpCode,
+		cp.cpName,
+		cp.fullName,
+		cp.billSyncUrl,
+		cp.compManager,
+		cp.address,
+		cp.mainFlag,
+		cp.status,
+		cp.companyDesc,
+		cp.userName,
+		cp.passWord,
+		cp.phone,
+		(select count(id) from infoapplication app where app.cpId = cp.id and app.status = '1') as appCount,
+		cp.createPerson,
+		cp.createTime,
+		cp.lastUpdatePerson,
+		cp.lastUpdateTime
+		from <include refid="base_table"/> cp
+		<include refid="select_condition_where"/>
+		and status != '3'
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT <include refid="select_field_count" />
+		from <include refid="base_table"/> 
+		<include refid="select_condition_where"/>
+		and status != '3'
+	</select> 
+	
+	<insert id="add" parameterType="com.zhrt.entity.CpInfo">
+	  <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+	    SELECT UUID_SHORT() as id;   
+	  </selectKey>
+	  insert into  <include refid="base_table" />
+	  ( <include refid="insert_field_list" /> )  
+	 values( 
+		#{id},
+		#{cpCode},
+		#{cpName},
+		#{fullName},
+		#{billSyncUrl},
+		#{compManager},
+		#{address},
+		#{companyDesc},
+		#{userName},
+		#{passWord},
+		#{phone},
+		#{createPerson},
+		#{createTime},
+		#{lastUpdatePerson},
+		#{lastUpdateTime}
+	 )  
+	</insert>  
+
+
+	<!-- 修改信息，只修改只不为空的字段 -->  
+	<update id="update" parameterType="com.zhrt.entity.CpInfo" >  
+	    update <include refid="base_table" /> 
+	    set
+	   		<if test="cpCode != null and cpCode !='null'">  
+			 cpCode=#{cpCode},
+			</if>
+			<if test="cpName != null and cpName !='null'">  
+			 cpName=#{cpName},
+			</if>
+			<if test="fullName != null and fullName !='null'">  
+			 fullName=#{fullName},
+			</if>
+			<if test="billSyncUrl != null and billSyncUrl !='null'">  
+			 billSyncUrl=#{billSyncUrl},
+			</if>
+			<if test="compManager != null and compManager !='null'">  
+			 compManager=#{compManager},
+			</if>
+			<if test="address != null and address !='null'">  
+			 address=#{address},
+			</if>
+			<if test="status != null and status !='null'">  
+			 status=#{status},
+			</if>
+			<if test="companyDesc != null and companyDesc !='null'">  
+			 companyDesc=#{companyDesc},
+			</if>
+			<if test="userName != null and userName !='null'">  
+			 userName=#{userName},
+			</if>
+			<if test="passWord != null and passWord !='null'">  
+			 passWord=#{passWord},
+			</if>
+			<if test="phone != null and phone !='null'">  
+			 phone=#{phone},
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson !='null'">  
+			 lastUpdatePerson=#{lastUpdatePerson},
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime !='null'">  
+			 lastUpdateTime=#{lastUpdateTime},
+			</if>
+			id=#{id}
+	    where id=#{id}
+	</update>
+	  	
+
+	<!-- 删除信息 -->  
+	<delete id="delById" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where id=#{id}
+	</delete>
+
+	<!-- 批量删除信息 -->  
+	<delete id="delBatch" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where
+	    <if test="ids != null">
+	    	id in
+	    	 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+				#{item}
+			</foreach>  
+			and
+	    </if>
+	    <if test="id != null">
+			id=#{id}  and
+	    </if>
+	    1=1
+	</delete>
+</mapper> 

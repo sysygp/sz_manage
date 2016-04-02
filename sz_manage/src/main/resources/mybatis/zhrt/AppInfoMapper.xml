@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhrt.dao.AppInfoDao">
+
+	<!-- 表名 -->
+	<sql id="base_table" > 
+	    infoapplication
+	</sql>  
+	
+	<!-- 插入字段 -->
+	<sql id="insert_field_list">
+	 id,
+	 cpId,
+	 cpCode,
+	 appName,
+	 wxAppId,
+	 wxAppSecret,
+	 appSeq,
+	 appType,
+	 myepayAppId,
+	 descript,
+	 myepaySdkVer,
+	 myepayChanAppId,
+	 status,
+	<!--  icon, -->
+	 appSort,
+	 createPerson,
+	 createTime,
+	 lastUpdatePerson,
+	 lastUpdateTime,
+	 appRankSeq,
+	 talkingdataAppid,
+	 talkingdataKey
+	</sql>
+
+	<!-- 查询字段 -->
+	<sql id="select_field_list">
+		id,
+	 cpId,
+	 cpCode,
+	 appName,
+	 wxAppId,
+	 wxAppSecret,
+	 appSeq,
+	 appType,
+	 myepayAppId,
+	 descript,
+	 myepaySdkVer,
+	 myepayChanAppId,
+	 status,
+	<!--  icon, -->
+	 appSort,
+	 createPerson,
+	 createTime,
+	 lastUpdatePerson,
+	 lastUpdateTime,
+	 appRankSeq,
+	 talkingdataAppid,
+	 talkingdataKey
+	</sql>
+	
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+	
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where  1=1 
+			<if test="id != null and id != ''">  
+			 and id=#{id} 
+			</if>
+			<if test="cpId != null and cpId != ''">  
+			 and cpId=#{cpId} 
+			</if>
+			<if test="myepayAppId != null and myepayAppId != ''">  
+			 and myepayAppId=#{myepayAppId} 
+			</if>
+			<if test="cpCode != null and cpCode != ''">  
+			 and cpCode=#{cpCode} 
+			</if>
+			<if test="appName != null and appName != ''">  
+			 and appName like '%${appName}%'
+			</if>
+			<if test="wxAppId != null and wxAppId != ''">  
+			 and wxAppId=#{wxAppId}
+			</if>
+			<if test="wxAppSecret != null and wxAppSecret != ''">  
+			  and wxAppSecret=#{wxAppSecret}
+			</if>
+			<if test="appSeq != null">  
+			 and appSeq=#{appSeq}
+			</if>
+			<if test="appType != null and appType != ''">  
+			 and appType=#{appType} 
+			</if>
+			<if test="descript != null and descript != ''">  
+			 and descript=#{descript} 
+			</if>
+			<if test="myepaySdkVer != null and myepaySdkVer != ''">  
+			 and myepaySdkVer=#{myepaySdkVer}  	 
+			</if>
+			<if test="talkingdataAppid != null and talkingdataAppid != ''">  
+			 and talkingdataAppid=#{talkingdataAppid} 
+			</if>
+			<if test="talkingdataKey != null and talkingdataKey != ''">  
+			 and talkingdataKey=#{talkingdataKey} 
+			</if>
+			<if test="myepayChanAppId != null and myepayChanAppId != ''">  
+			 and myepayChanAppId=#{myepayChanAppId} 
+			</if>
+			<if test="status != null and status != ''">  
+			 and status=#{status} 
+			</if>
+			<!-- <if test="icon != null and icon != ''">  
+			 and icon=#{icon} 
+			</if> -->
+			<if test="appSort != null and appSort != ''">  
+			 and appSort=#{appSort} 
+			</if>
+			<if test="createPerson != null and createPerson != ''">  
+			 and createPerson=#{createPerson} 
+			</if>
+			<if test="createTime != null and createTime != ''">  
+			 and createTime=#{createTime} 
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson != ''">  
+			 and lastUpdatePerson=#{lastUpdatePerson} 
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime != ''">  
+			 and lastUpdateTime=#{lastUpdateTime} 
+			</if>
+			<if test="appRankSeq != null">  
+			 and appRankSeq=#{appRankSeq} 
+			</if>
+	</sql> 
+
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if test="orderBy != null and  orderBy != '' and order != null and  order != '' ">  
+			 order by ${orderBy} ${order} 
+		</if>
+		<if test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">  
+			 limit #{limitB},#{limitNum} 
+		</if>
+	</sql> 
+		
+	<!-- 查询单条数据 -->
+	<select id="get" parameterType="map" resultType="com.zhrt.entity.AppInfo">
+		SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>  
+		<include refid="select_condition_where"/> 
+		limit 1
+	</select> 
+	
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="com.zhrt.entity.AppInfo">
+		SELECT <include refid="select_field_list" />
+		from <include refid="base_table"/>
+		<include refid="select_condition_where"/>
+		and status != '3'
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	<select id="getForPage" parameterType="map" resultType="com.zhrt.entity.AppInfo">
+		SELECT 
+			 app.id,
+			 app.cpId,
+			 app.cpCode,
+			 app.appName,
+			 app.wxAppId,
+	 		 app.wxAppSecret,
+			 app.appSeq,
+			 app.appType,
+			 app.myepayAppId,
+			 app.descript,
+			 app.myepaySdkVer,
+			 app.myepayChanAppId,
+			 app.status,
+			<!--  app.icon, -->
+			 app.appSort,
+			 (select count(id) from infoprop p where p.appId = app.id and p.status = '1') as propCount,
+			 app.createPerson,
+			 app.createTime,
+			 app.lastUpdatePerson,
+			 app.lastUpdateTime,
+			 app.appRankSeq,
+			 app.talkingdataAppid,
+			 app.talkingdataKey
+		from <include refid="base_table"/> app
+		<include refid="select_condition_where"/>
+		and app.status != '3'
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT <include refid="select_field_count" />
+		from <include refid="base_table"/> 
+		<include refid="select_condition_where"/>
+		and status != '3'
+	</select> 
+	
+	<insert id="add" parameterType="com.zhrt.entity.AppInfo">
+	  <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+	    SELECT UUID_SHORT() as id;   
+	  </selectKey>
+	  insert into  <include refid="base_table" />
+	  ( <include refid="insert_field_list" /> )  
+	 values( 
+	#{id},
+	#{cpId},
+	#{cpCode},
+	#{appName},
+	#{wxAppId},
+	#{wxAppSecret},
+	#{appSeq},	
+	#{appType},
+	#{myepayAppId},
+	#{descript},
+	#{myepaySdkVer},
+	#{myepayChanAppId},
+	#{status},
+	<!-- #{icon}, -->
+	#{appSort},
+	#{createPerson},
+	#{createTime},
+	#{lastUpdatePerson},
+	#{lastUpdateTime},
+	#{appRankSeq},
+	#{ talkingdataAppid},
+	#{talkingdataKey}
+	 )  
+	</insert>  
+
+
+	<!-- 修改信息，只修改只不为空的字段 -->  
+	<update id="update" parameterType="com.zhrt.entity.AppInfo" >  
+	    update <include refid="base_table" /> 
+	    set
+			<if test="cpId != null and cpId !='null'">  
+			 cpId=#{cpId}, 
+			</if>
+			<if test="cpCode != null and cpCode !='null'">  
+			 cpCode=#{cpCode}, 
+			</if>
+			<if test="appName != null and appName !='null'">  
+			 appName=#{appName}, 
+			</if>
+			<if test="wxAppId != null and wxAppId !='null'">  
+			 wxAppId=#{wxAppId}, 
+			</if>
+			<if test="wxAppSecret != null and wxAppSecret !='null'">  
+			 wxAppSecret=#{wxAppSecret}, 
+			</if>
+			<if test="appSeq != null">  
+			 appSeq=#{appSeq}, 
+			</if>
+			<if test="appType != null and appType !='null'">  
+			 appType=#{appType}, 
+			</if>
+			<if test="myepayAppId != null and myepayAppId !='null'">  
+			 myepayAppId=#{myepayAppId}, 
+			</if>
+			<if test="descript != null and descript !='null'">  
+			 descript=#{descript}, 
+			</if>
+			<if test="myepaySdkVer != null and myepaySdkVer !='null'">  
+			 myepaySdkVer=#{myepaySdkVer}, 
+			</if>
+			<if test="myepayChanAppId != null and myepayChanAppId != 'null'">  
+			 myepayChanAppId=#{myepayChanAppId}, 
+			</if>
+			<if test="status != null and status !='null'">  
+			 status=#{status}, 
+			</if>
+			<if test="talkingdataAppid != null and talkingdataAppid !='null'">  
+			 talkingdataAppid=#{talkingdataAppid}, 
+			</if>
+			<if test="talkingdataKey != null and talkingdataKey !='null'">  
+			 talkingdataKey=#{talkingdataKey}, 
+			</if>
+			<!-- <if test="icon != null and icon !='null'">  
+			 icon=#{icon}, 
+			</if> -->
+			<if test="appSort != null and appSort !='null'">  
+			 appSort=#{appSort}, 
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson !='null'">  
+			 lastUpdatePerson=#{lastUpdatePerson}, 
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime !='null'">  
+			 lastUpdateTime=#{lastUpdateTime},
+			</if>
+			<if test="appRankSeq != null">  
+			 appRankSeq=#{appRankSeq},
+			</if>
+			id=#{id}
+	    where id=#{id}
+	</update>
+	  	
+
+	<!-- 删除信息 -->  
+	<delete id="delById" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where id=#{id}
+	</delete>
+
+	<!-- 批量删除信息 -->  
+	<delete id="delBatch" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where
+	    <if test="ids != null">
+	    	id in
+	    	 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+				#{item}
+			</foreach>  
+			and
+	    </if>
+	    <if test="id != null">
+			id=#{id}  and
+	    </if>
+	    1=1
+	</delete>
+	
+	<!--查询渠道运营的产品  -->
+	<select id="getByChannel" parameterType="java.lang.String" resultType="com.zhrt.entity.AppInfo">
+		select 
+			 a.id,
+			 a.cpId,
+			 a.cpCode,
+			 a.appName,
+			 a.wxAppId,
+			 a.wxAppSecret,
+			 a.appSeq,
+			 a.appType,
+			 a.myepayAppId,
+			 a.descript,
+			 a.myepaySdkVer,
+			 a.myepayChanAppId,
+			 a.status,
+			<!--  a.icon, -->
+			 a.appSort,
+			 a.createPerson,
+			 a.createTime,
+			 a.lastUpdatePerson,
+			 a.lastUpdateTime,
+			 a.appRankSeq,
+			 a.talkingdataAppid,
+			 a.talkingdataKey
+		from infoapplication a 
+		LEFT JOIN infochannelappl ca on ca.appId = a.id 
+		where ca.channelId = #{channelId}
+		and a.status ='1' and ca.status ='1'
+	</select>
+	
+	<!-- 创建平台产品用户分表 -->
+	<parameterMap type="map" id="vo">
+		<parameter property="platid" jdbcType="VARCHAR" mode="IN" />
+		<parameter property="appseq" jdbcType="VARCHAR" mode="IN"/>
+	</parameterMap> 
+	<select id="createAppUserTables" parameterMap="vo" resultType="map" statementType="CALLABLE">
+		{CALL PROC_CREATE_APP_USER_TABLES(
+			?,?
+		)}
+	</select> 
+</mapper> 

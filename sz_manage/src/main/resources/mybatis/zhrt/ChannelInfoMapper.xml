@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhrt.dao.ChannelInfoDao">
+
+	<!-- 表名 -->
+	<sql id="base_table" > 
+	    infochannel
+	</sql>  
+	
+	<!-- 插入字段 -->
+	<sql id="insert_field_list">
+	  id,
+	  <!-- parentId, -->
+	  channelCode,
+	  cnName,
+	  fullName,
+	  channelId,
+	  platId,
+	  userName,
+	  passWord,
+	  phone,
+	 <!--  status,  --><!-- 使用默认值 -->
+	  parentId,
+	  createPerson,
+	  createTime,
+	  lastUpdatePerson,
+	  lastUpdateTime
+	</sql>
+
+	<!-- 查询字段 -->
+	<sql id="select_field_list">
+		id,
+	  channelCode,
+	  cnName,
+	  fullName,
+	  channelId,
+	  platId,
+	  mainFlag,
+	  userName,
+	  passWord,
+	  phone,
+	  status,
+	  parentId,
+	  createPerson,
+	  createTime,
+	  lastUpdatePerson,
+	  lastUpdateTime
+	</sql>
+	
+	<!-- 查询总数字段 -->
+	<sql id="select_field_count">
+		count(*)
+	</sql>
+	
+	<!-- 查询条件where -->
+	<sql id="select_condition_where">
+		where  1=1 
+			<if test="id != null and id != ''">  
+			 and id=#{id} 
+			</if>
+		    <if test="parentId !=null and parentId != ''">
+		    and parentId = #{parentId}
+		    </if>
+		    <if test="channelCode !=null and channelCode != ''">
+		    and channelCode = #{channelCode}
+		    </if> 
+		    <if test="cnName !=null and cnName != ''">
+		    and cnName like '%${cnName}%'
+		    </if>
+			<if test="fullName != null and fullName != ''">  
+			 and fullName=#{fullName} 
+			</if>
+			<if test="channelId != null and channelId != ''">  
+			 and channelId=#{channelId} 
+			</if>
+			<if test="platId != null and platId != ''">  
+			 and platId=#{platId} 
+			</if>
+			<if test="userName != null and userName != ''">  
+			 and userName=#{userName} 
+			</if>
+			<if test="passWord != null and passWord != ''">  
+			 and passWord=#{passWord} 
+			</if>
+			<if test="phone != null and phone != ''">  
+			 and phone=#{phone} 
+			</if>
+			<if test="status != null and status != ''">  
+			 and status=#{status} 
+			</if>
+			<if test="createPerson != null and createPerson != ''">  
+			 and createPerson=#{createPerson} 
+			</if>
+			<if test="createTime != null and createTime != ''">  
+			 and createTime=#{createTime} 
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson != ''">  
+			 and lastUpdatePerson=#{lastUpdatePerson} 
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime != ''">  
+			 and lastUpdateTime=#{lastUpdateTime} 
+			</if>
+	</sql> 
+
+	<!-- 查询条件orderby和limit等 -->
+	<sql id="select_condition_orderlimit">
+		<if test="orderBy != null and  orderBy != '' and order != null and  order != '' ">  
+			 order by ${orderBy} ${order} 
+		</if>
+		<if test="limitB != null and  limitB >= 0 and limitNum != null and  limitNum >= 0 ">  
+			 limit #{limitB},#{limitNum} 
+		</if>
+	</sql> 
+		
+	<!-- 查询单条数据 -->
+	<select id="get" parameterType="map" resultType="com.zhrt.entity.ChannelInfo">
+		SELECT <include refid="select_field_list" /> 
+		from <include refid="base_table"/>  
+		<include refid="select_condition_where"/> 
+		limit 1
+	</select> 
+	
+	<!-- 查询多条数据 -->
+	<select id="getList" parameterType="map" resultType="com.zhrt.entity.ChannelInfo">
+		SELECT <include refid="select_field_list" />
+		from <include refid="base_table"/>
+		<include refid="select_condition_where"/>
+		and status != '3'
+		<include refid="select_condition_orderlimit" />
+	</select> 
+	
+	
+	<!-- 查询多条数据总条数 -->
+	<select id="getListCount" parameterType="map" resultType="int">
+		SELECT <include refid="select_field_count" />
+		from <include refid="base_table"/> 
+		<include refid="select_condition_where"/>
+		and status != '3'
+	</select> 
+	<!--查询运营产品的渠道  -->
+	<select id="getByChannelApp" parameterType="java.util.Map" resultType="com.zhrt.entity.ChannelInfo">
+		select 
+			c.id,
+			c.channelcode,
+			c.cnname,
+			c.fullname,
+			c.channelid,
+			c.platid,
+			c.mainflag,
+			c.userName,
+			c.passWord,
+			c.phone,
+			c.status,
+			c.parentId,
+			c.createperson,
+			c.createtime,
+			c.lastupdateperson,
+			c.lastupdatetime
+		from infochannel c 
+			left join infochannelappl ca on c.id = ca.channelId 
+			left join infoapplication a on ca.appid = a.id 
+		where ca.status = #{status} and c.status = #{status} and a.id = #{appid}
+	</select>
+	<!--列表页查询，关联查询运营产品数量  -->
+	<select id="getForPage" parameterType="java.util.Map" resultType="com.zhrt.entity.ChannelInfo">
+		SELECT 
+			C.ID,
+			C.CHANNELCODE,
+			C.CNNAME,
+			C.FULLNAME,
+			C.CHANNELID,
+			C.PLATID,
+			C.MAINFLAG,
+			C.USERNAME,
+			C.PASSWORD,
+			C.PHONE,
+			C.STATUS,
+			c.parentId,
+			C.CREATEPERSON,
+			C.CREATETIME,
+			C.LASTUPDATEPERSON,
+			C.LASTUPDATETIME,
+			<!--查询父渠道时关联查询子渠道数量  -->
+			<if test="parentId!=null and parentId!=''">
+				(SELECT COUNT(ID) FROM INFOCHANNEL IC WHERE IC.PARENTID = C.ID) AS CHILDCHANNELCOUNT,
+			</if>
+			COUNT(CA.ID) AS APPCOUNT
+			FROM INFOCHANNEL C 
+				LEFT JOIN INFOCHANNELAPPL CA ON C.ID = CA.CHANNELID AND CA.STATUS = '1' 
+				LEFT JOIN INFOAPPLICATION A ON CA.APPID = A.ID AND A.STATUS = '1'
+			where 1=1
+			and c.status != '3'
+			<if test="cnName!=null and cnName!=''">
+				and c.cnName like '%${cnName}%'
+			</if>
+			<if test="status!=null and status!=''">
+				and c.status = #{status}
+			</if>
+			<if test="parentId!=null and parentId!=''">
+				and c.parentId = #{parentId}
+			</if>
+			GROUP BY C.ID
+	</select>
+	
+	<insert id="add" parameterType="com.zhrt.entity.ChannelInfo">
+	  <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+	    SELECT UUID_SHORT() as id;   
+	  </selectKey>
+	  insert into  <include refid="base_table" />
+	  ( <include refid="insert_field_list" /> )  
+	 values( 
+	 #{id},
+	 <!-- #{parentId}, -->
+	 #{channelCode},
+	 #{cnName},
+	 #{fullName},
+	 #{channelId},
+	 #{platId},
+	 #{userName},
+	 #{passWord},
+	 #{phone},
+	<!--  #{status}, -->
+	 #{parentId},
+	 #{createPerson},
+	 #{createTime},
+	 #{lastUpdatePerson},
+	 #{lastUpdateTime}
+	 )  
+	</insert>  
+
+
+	<!-- 修改信息，只修改只不为空的字段 -->  
+	<update id="update" parameterType="com.zhrt.entity.ChannelInfo" >  
+	    update <include refid="base_table" /> 
+	    set
+		    <if test="parentId !=null and parentId !='null'">
+		    parentId = #{parentId},
+		    </if>
+		    <if test="channelCode !=null and channelCode !='null'">
+		    channelCode = #{channelCode},
+		    </if> 
+		    <if test="cnName !=null and cnName !='null'">
+		    cnName = #{cnName},
+		    </if>
+			<if test="fullName != null and fullName !='null'">  
+			 fullName=#{fullName}, 
+			</if>
+			<if test="channelId != null and channelId !='null'">  
+			 channelId=#{channelId}, 
+			</if>
+			<if test="platId != null and platId !='null'">  
+			 platId=#{platId}, 
+			</if>
+			<if test="userName != null and userName !='null'">  
+			 userName=#{userName}, 
+			</if>
+			<if test="passWord != null and passWord !='null'">  
+			 passWord=#{passWord}, 
+			</if>
+			<if test="phone != null and phone !='null'">  
+			 phone=#{phone}, 
+			</if>
+			<if test="status != null and status !='null'">  
+			 status=#{status}, 
+			</if>
+			<if test="lastUpdatePerson != null and lastUpdatePerson !='null'">  
+			 lastUpdatePerson=#{lastUpdatePerson}, 
+			</if>
+			<if test="lastUpdateTime != null and lastUpdateTime !='null'">  
+			 lastUpdateTime=#{lastUpdateTime},
+			</if>
+			id=#{id}
+	    where id=#{id}
+	</update>
+	  	
+
+	<!-- 删除信息 -->  
+	<delete id="delById" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where id=#{id}
+	</delete>
+
+	<!-- 批量删除信息 -->  
+	<delete id="delBatch" parameterType="Object">
+		delete from <include refid="base_table" />  
+	    where
+	    <if test="ids != null">
+	    	id in
+	    	 <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+				#{item}
+			</foreach>  
+			and
+	    </if>
+	    <if test="id != null">
+			id=#{id}  and
+	    </if>
+	    1=1
+	</delete>
+	<!-- 查询某个版本推广的渠道 -->
+	<select id="getByVerId" parameterType="java.util.Map" resultType="com.zhrt.entity.ChannelInfo">
+		select 
+			c.id,
+		  c.channelCode,
+		  c.cnName,
+		  c.fullName,
+		  c.channelId,
+		  c.platId,
+		  c.userName,
+		  c.passWord,
+		  c.phone,
+		  c.parentId,
+		  c.createPerson,
+		  c.createTime,
+		  c.lastUpdatePerson,
+		  c.lastUpdateTime
+	    from <include refid="base_table"/> c
+		left join infochannelappl ca on ca.channelId = c.id and ca.verId=#{verId}
+		where ca.status = '1' and c.status = #{status} 
+	</select>
+</mapper> 
